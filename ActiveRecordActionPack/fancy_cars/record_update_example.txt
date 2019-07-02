@@ -1,0 +1,79 @@
+irb(main):032:0> pp Person.where(last_name: "Smith")
+  Person Load (0.2ms)  SELECT "people".* FROM "people" WHERE "people"."last_name" = ?  [["last_name", "Smith"]]
+[#<Person:0x00007fc94421dd28
+  id: 1,
+  first_name: "[\"Joe\", \"Smith\"]",
+  last_name: "Smith",
+  created_at: Tue, 02 Jul 2019 19:04:33 UTC +00:00,
+  updated_at: Tue, 02 Jul 2019 19:04:33 UTC +00:00>]
+=> #<ActiveRecord::Relation [#<Person id: 1, first_name: "[\"Joe\", \"Smith\"]", last_name: "Smith", created_at: "2019-07-02 19:04:33", updated_at: "2019-07-02 19:04:33">]>
+
+irb(main):033:0> joe = Person.find_by last_name: "Smith"
+  Person Load (0.2ms)  SELECT  "people".* FROM "people" WHERE "people"."last_name" = ? LIMIT ?  [["last_name", "Smith"], ["LIMIT", 1]]
+=> #<Person id: 1, first_name: "[\"Joe\", \"Smith\"]", last_name: "Smith", created_at: "2019-07-02 19:04:33", updated_at: "2019-07-02 19:04:33">
+
+irb(main):034:0> joe.first_name = "Joe"
+=> "Joe"
+
+irb(main):035:0> joe
+=> #<Person id: 1, first_name: "Joe", last_name: "Smith", created_at: "2019-07-02 19:04:33", updated_at: "2019-07-02 19:04:33">
+
+irb(main):036:0> joe.save
+   (0.1ms)  begin transaction
+  Person Update (0.5ms)  UPDATE "people" SET "first_name" = ?, "updated_at" = ? WHERE "people"."id" = ?  [["first_name", "Joe"], ["updated_at", "2019-07-02 21:07:23.935031"], ["id", 1]]
+   (0.9ms)  commit transaction
+=> true
+
+irb(main):037:0> pp Person.where(last_name: "Smith")
+  Person Load (0.2ms)  SELECT "people".* FROM "people" WHERE "people"."last_name" = ?  [["last_name", "Smith"]]
+[#<Person:0x00007fc9441e63f0
+  id: 1,
+  first_name: "Joe",
+  last_name: "Smith",
+  created_at: Tue, 02 Jul 2019 19:04:33 UTC +00:00,
+  updated_at: Tue, 02 Jul 2019 21:07:23 UTC +00:00>]
+=> #<ActiveRecord::Relation [#<Person id: 1, first_name: "Joe", last_name: "Smith", created_at: "2019-07-02 19:04:33", updated_at: "2019-07-02 21:07:23">]>
+
+irb(main):043:0> pp Person.all
+  Person Load (0.1ms)  SELECT "people".* FROM "people"
+[#<Person:0x00007fc94418ee98
+  id: 1,
+  first_name: "Joe",
+  last_name: "Smith",
+  created_at: Tue, 02 Jul 2019 19:04:33 UTC +00:00,
+  updated_at: Tue, 02 Jul 2019 21:07:23 UTC +00:00>,
+ #<Person:0x00007fc94418ed58
+  id: 2,
+  first_name: "John",
+  last_name: "Doe",
+  created_at: Tue, 02 Jul 2019 19:05:31 UTC +00:00,
+  updated_at: Tue, 02 Jul 2019 19:05:31 UTC +00:00>,
+ #<Person:0x00007fc94418ec18
+  id: 3,
+  first_name: "Sam",
+  last_name: "what",
+  created_at: Tue, 02 Jul 2019 19:06:07 UTC +00:00,
+  updated_at: Tue, 02 Jul 2019 19:06:07 UTC +00:00>]
+=> #<ActiveRecord::Relation [#<Person id: 1, first_name: "Joe", last_name: "Smith", created_at: "2019-07-02 19:04:33", updated_at: "2019-07-02 21:07:23">, #<Person id: 2, first_name: "John", last_name: "Doe", created_at: "2019-07-02 19:05:31", updated_at: "2019-07-02 19:05:31">, #<Person id: 3, first_name: "Sam", last_name: "what", created_at: "2019-07-02 19:06:07", updated_at: "2019-07-02 19:06:07">]>
+
+irb(main):044:0> Person.find_by(last_name: "Smith").update(last_name: "Smithson")
+  Person Load (0.2ms)  SELECT  "people".* FROM "people" WHERE "people"."last_name" = ? LIMIT ?  [["last_name", "Smith"], ["LIMIT", 1]]
+   (0.1ms)  begin transaction
+  Person Update (0.4ms)  UPDATE "people" SET "last_name" = ?, "updated_at" = ? WHERE "people"."id" = ?  [["last_name", "Smithson"], ["updated_at", "2019-07-02 21:08:54.122664"], ["id", 1]]
+   (0.9ms)  commit transaction
+=> true
+
+irb(main):045:0> pp Person.where(last_name: "Smith")
+  Person Load (0.2ms)  SELECT "people".* FROM "people" WHERE "people"."last_name" = ?  [["last_name", "Smith"]]
+[]
+=> #<ActiveRecord::Relation []>
+
+irb(main):046:0> pp Person.where(last_name: "Smithson")
+  Person Load (0.1ms)  SELECT "people".* FROM "people" WHERE "people"."last_name" = ?  [["last_name", "Smithson"]]
+[#<Person:0x00007fc94414f9c8
+  id: 1,
+  first_name: "Joe",
+  last_name: "Smithson",
+  created_at: Tue, 02 Jul 2019 19:04:33 UTC +00:00,
+  updated_at: Tue, 02 Jul 2019 21:08:54 UTC +00:00>]
+=> #<ActiveRecord::Relation [#<Person id: 1, first_name: "Joe", last_name: "Smithson", created_at: "2019-07-02 19:04:33", updated_at: "2019-07-02 21:08:54">]>

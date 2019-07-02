@@ -1,0 +1,27 @@
+irb(main):001:0> Person.column_names
+=> ["id", "first_name", "last_name", "created_at", "updated_at"]
+irb(main):002:0>
+irb(main):003:0>
+irb(main):004:0> p1 = Person.new
+=> #<Person id: nil, first_name: nil, last_name: nil, created_at: nil, updated_at: nil>
+irb(main):005:0> p1.first_name = "Joe", p1.last_name = "Smith"
+=> ["Joe", "Smith"]
+irb(main):006:0> p1
+=> #<Person id: nil, first_name: "[\"Joe\", \"Smith\"]", last_name: "Smith", created_at: nil, updated_at: nil>
+irb(main):007:0> p1.save
+   (0.1ms)  begin transaction
+  Person Create (1.3ms)  INSERT INTO "people" ("first_name", "last_name", "created_at", "updated_at") VALUES (?, ?, ?, ?)  [["first_name", "[\"Joe\", \"Smith\"]"], ["last_name", "Smith"], ["created_at", "2019-07-02 19:04:33.168459"], ["updated_at", "2019-07-02 19:04:33.168459"]]
+   (2.0ms)  commit transaction
+=> true
+irb(main):008:0>
+irb(main):009:0> p2 = Person.new(first_name: "John", last_name: "Doe"); p2.save
+   (0.1ms)  begin transaction
+  Person Create (0.4ms)  INSERT INTO "people" ("first_name", "last_name", "created_at", "updated_at") VALUES (?, ?, ?, ?)  [["first_name", "John"], ["last_name", "Doe"], ["created_at", "2019-07-02 19:05:31.841924"], ["updated_at", "2019-07-02 19:05:31.841924"]]
+   (2.3ms)  commit transaction
+=> true
+irb(main):010:0>
+irb(main):011:0> p3 = Person.create(first_name: "Sam", last_name: "what")
+   (0.0ms)  begin transaction
+  Person Create (0.4ms)  INSERT INTO "people" ("first_name", "last_name", "created_at", "updated_at") VALUES (?, ?, ?, ?)  [["first_name", "Sam"], ["last_name", "what"], ["created_at", "2019-07-02 19:06:07.733340"], ["updated_at", "2019-07-02 19:06:07.733340"]]
+   (0.7ms)  commit transaction
+=> #<Person id: 3, first_name: "Sam", last_name: "what", created_at: "2019-07-02 19:06:07", updated_at: "2019-07-02 19:06:07">

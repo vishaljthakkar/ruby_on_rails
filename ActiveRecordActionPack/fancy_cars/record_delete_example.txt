@@ -1,0 +1,60 @@
+irb(main):004:0> Person.count
+   (1.4ms)  SELECT COUNT(*) FROM "people"
+=> 3
+
+irb(main):005:0>
+irb(main):006:0>
+irb(main):007:0>
+irb(main):008:0>
+irb(main):009:0> joe = Person.find_by(first_name: "Joe")
+  Person Load (0.2ms)  SELECT  "people".* FROM "people" WHERE "people"."first_name" = ? LIMIT ?  [["first_name", "Joe"], ["LIMIT", 1]]
+=> #<Person id: 1, first_name: "Joe", last_name: "Smithson", created_at: "2019-07-02 19:04:33", updated_at: "2019-07-02 21:08:54">
+
+irb(main):010:0> joe.destroy
+   (3.5ms)  begin transaction
+  Person Destroy (0.6ms)  DELETE FROM "people" WHERE "people"."id" = ?  [["id", 1]]
+   (0.7ms)  commit transaction
+=> #<Person id: 1, first_name: "Joe", last_name: "Smithson", created_at: "2019-07-02 19:04:33", updated_at: "2019-07-02 21:08:54">
+
+irb(main):011:0>
+irb(main):012:0>
+irb(main):013:0>
+irb(main):014:0> pp Person.all
+  Person Load (0.4ms)  SELECT "people".* FROM "people"
+[#<Person:0x00007fc941bc17b0
+  id: 2,
+  first_name: "John",
+  last_name: "Doe",
+  created_at: Tue, 02 Jul 2019 19:05:31 UTC +00:00,
+  updated_at: Tue, 02 Jul 2019 19:05:31 UTC +00:00>,
+ #<Person:0x00007fc941bc13a0
+  id: 3,
+  first_name: "Sam",
+  last_name: "what",
+  created_at: Tue, 02 Jul 2019 19:06:07 UTC +00:00,
+  updated_at: Tue, 02 Jul 2019 19:06:07 UTC +00:00>]
+=> #<ActiveRecord::Relation [#<Person id: 2, first_name: "John", last_name: "Doe", created_at: "2019-07-02 19:05:31", updated_at: "2019-07-02 19:05:31">, #<Person id: 3, first_name: "Sam", last_name: "what", created_at: "2019-07-02 19:06:07", updated_at: "2019-07-02 19:06:07">]>
+
+irb(main):015:0> john = Person.find_by(first_name: "John")
+  Person Load (0.1ms)  SELECT  "people".* FROM "people" WHERE "people"."first_name" = ? LIMIT ?  [["first_name", "John"], ["LIMIT", 1]]
+=> #<Person id: 2, first_name: "John", last_name: "Doe", created_at: "2019-07-02 19:05:31", updated_at: "2019-07-02 19:05:31">
+
+irb(main):016:0> Person.delete(john.id)
+  Person Destroy (1.4ms)  DELETE FROM "people" WHERE "people"."id" = ?  [["id", 2]]
+=> 1
+
+irb(main):017:0> pp Person.all
+  Person Load (0.2ms)  SELECT "people".* FROM "people"
+[#<Person:0x00007fc942a11400
+  id: 3,
+  first_name: "Sam",
+  last_name: "what",
+  created_at: Tue, 02 Jul 2019 19:06:07 UTC +00:00,
+  updated_at: Tue, 02 Jul 2019 19:06:07 UTC +00:00>]
+=> #<ActiveRecord::Relation [#<Person id: 3, first_name: "Sam", last_name: "what", created_at: "2019-07-02 19:06:07", updated_at: "2019-07-02 19:06:07">]>
+
+irb(main):018:0>
+irb(main):019:0>
+irb(main):020:0> Person.count
+   (0.2ms)  SELECT COUNT(*) FROM "people"
+=> 1
