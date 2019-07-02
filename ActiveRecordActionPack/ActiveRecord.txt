@@ -1,4 +1,4 @@
 * Rails uses default as SQLlite.
 * Migrations => This is for Database Schema
 * Active Record => Interaction with Database Data.
-* Metaprogramming  => Dynamic Methods, Ghost methods, etc.
+*  Metaprogramming  => Dynamic Methods, Ghost methods, etc.
