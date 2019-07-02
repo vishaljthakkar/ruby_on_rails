@@ -1,0 +1,11 @@
+irb(main):001:0> props = {name: "John", age: 15}
+=> {:name=>"John", :age=>15}
+irb(main):002:0> class Person; attr_accessor :name, :age; end
+=> nil
+irb(main):003:0> person = Person.new
+=> #<Person:0x00007fb4859f6438>
+irb(main):004:0> props.each { |key, value| person.send("#{key}=", value)}
+=> {:name=>"John", :age=>15}
+irb(main):005:0> person
+=> #<Person:0x00007fb4859f6438 @name="John", @age=15>
+i
