@@ -1,0 +1,13 @@
+irb(main):006:0> print "Array Index method to avoid SQL Injection"
+Array Index method to avoid SQL Injection=> nil
+irb(main):007:0> Person.where("age BETWEEN ? AND ?", 28, 34).to_a
+  Person Load (0.2ms)  SELECT "people".* FROM "people" WHERE (age BETWEEN 28 AND 34)
+=> [#<Person id: 8, first_name: "Kalman", age: 33, last_name: "Smith", created_at: "2019-07-03 00:48:40", updated_at: "2019-07-03 00:48:40", login: "kman", pass: "abc123">, #<Person id: 14, first_name: "LeBron", age: 30, last_name: "James", created_at: "2019-07-03 00:48:40", updated_at: "2019-07-03 00:48:40", login: "bron", pass: "need more rings">]
+
+irb(main):009:0> print "Hash Index method to avoid SQL Injection"
+Hash Index method to avoid SQL Injection=> nil
+irb(main):011:0> Person.where("age BETWEEN :min_age AND :max_age", min_age:28, max_age:32).to_a
+  Person Load (0.2ms)  SELECT "people".* FROM "people" WHERE (age BETWEEN 28 AND 32)
+=> [#<Person id: 14, first_name: "LeBron", age: 30, last_name: "James", created_at: "2019-07-03 00:48:40", updated_at: "2019-07-03 00:48:40", login: "bron", pass: "need more rings">]
+
+# Like Prepared statement in Java
