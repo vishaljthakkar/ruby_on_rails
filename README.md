@@ -10,3 +10,4 @@
 8. rails console                                                    # Command to drop to console
 9. rails generate model person first_name last_name                 # Model generator. This does not generate controller.
 10. rake --describe db:seed                                         # Describe from where the DB will be seeded from.
+11. rails generate model personal_info height:float weight:float person:references  # Adding references belongs_to
