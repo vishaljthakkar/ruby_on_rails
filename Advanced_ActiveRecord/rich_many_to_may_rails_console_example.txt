@@ -1,0 +1,40 @@
+irb(main):021:0> lebron = Person.find_by(first_name: "LeBron")
+=> #<Person id: 21, first_name: "LeBron", age: 30, last_name: "James", created_at: "2019-07-04 01:04:34", updated_at: "2019-07-04 01:04:34", login: "bron", pass: "need more rings">
+irb(main):022:0> lebron.jobs.count
+=> 2
+irb(main):023:0> lebron.jobs.pluck(:id)
+=> [4, 5]
+irb(main):024:0> Job.find(4).create_salary_range(min_salary: 100000.00, max_salary: 300000.00)
+=> #<SalaryRange id: 1, min_salary: 100000.0, max_salary: 300000.0, job_id: 4, created_at: "2019-07-04 03:35:42", updated_at: "2019-07-04 03:35:42">
+irb(main):025:0> Job.find(5).create_salary_range(min_salary: 10000.00, max_salary: 33000.00)
+=> #<SalaryRange id: 2, min_salary: 10000.0, max_salary: 33000.0, job_id: 5, created_at: "2019-07-04 03:36:02", updated_at: "2019-07-04 03:36:02">
+irb(main):026:0> lebron.approx_salaries
+=> #<ActiveRecord::Associations::CollectionProxy [#<SalaryRange id: 1, min_salary: 100000.0, max_salary: 300000.0, job_id: 4, created_at: "2019-07-04 03:35:42", updated_at: "2019-07-04 03:35:42">, #<SalaryRange id: 2, min_salary: 10000.0, max_salary: 33000.0, job_id: 5, created_at: "2019-07-04 03:36:02", updated_at: "2019-07-04 03:36:02">]>
+irb(main):027:0>
+irb(main):028:0> pp lebron.approx_salaries
+[#<SalaryRange:0x00007f8442050230
+  id: 1,
+  min_salary: 100000.0,
+  max_salary: 300000.0,
+  job_id: 4,
+  created_at: Thu, 04 Jul 2019 03:35:42 UTC +00:00,
+  updated_at: Thu, 04 Jul 2019 03:35:42 UTC +00:00>,
+ #<SalaryRange:0x00007f84420500f0
+  id: 2,
+  min_salary: 10000.0,
+  max_salary: 33000.0,
+  job_id: 5,
+  created_at: Thu, 04 Jul 2019 03:36:02 UTC +00:00,
+  updated_at: Thu, 04 Jul 2019 03:36:02 UTC +00:00>]
+=> #<ActiveRecord::Associations::CollectionProxy [#<SalaryRange id: 1, min_salary: 100000.0, max_salary: 300000.0, job_id: 4, created_at: "2019-07-04 03:35:42", updated_at: "2019-07-04 03:35:42">, #<SalaryRange id: 2, min_salary: 10000.0, max_salary: 33000.0, job_id: 5, created_at: "2019-07-04 03:36:02", updated_at: "2019-07-04 03:36:02">]>
+irb(main):029:0>
+
+
+irb(main):035:0> lebron = Person.find_by(last_name: "James")
+=> #<Person id: 21, first_name: "LeBron", age: 30, last_name: "James", created_at: "2019-07-04 01:04:34", updated_at: "2019-07-04 01:04:34", login: "bron", pass: "need more rings">
+irb(main):036:0> lebron.max_salary
+=> 300000.0
+
+
+irb(main):038:0> lebron.approx_salaries
+=> #<ActiveRecord::Associations::CollectionProxy [#<SalaryRange id: 1, min_salary: 100000.0, max_salary: 300000.0, job_id: 4, created_at: "2019-07-04 03:35:42", updated_at: "2019-07-04 03:35:42">, #<SalaryRange id: 2, min_salary: 10000.0, max_salary: 33000.0, job_id: 5, created_at: "2019-07-04 03:36:02", updated_at: "2019-07-04 03:36:02">]>
