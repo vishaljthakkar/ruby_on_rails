@@ -1,0 +1,35 @@
+# Before Adding default scope
+=============================
+
+irb(main):040:0> Person.pluck :first_name
+=> ["Kalman", "John", "Michael", "Josh", "John", "Bill", "LeBron"]
+irb(main):041:0> reload!
+Reloading...
+=> true
+# After Adding default scope
+=============================
+
+irb(main):042:0> Person.pluck :first_name
+=> ["Bill", "John", "John", "Josh", "Kalman", "LeBron", "Michael"]
+
+irb(main):043:0> Person.unscoped.pluck :first_name
+=> ["Kalman", "John", "Michael", "Josh", "John", "Bill", "LeBron"]
+
+
+# After adding named scope: ordered_by_age and starts_with
+=========================================================
+irb(main):047:0> pp Person.ordered_by_age.pluck :age
+[75, 27, 27, 57, 33, 30, 15]
+=> [75, 27, 27, 57, 33, 30, 15]
+
+irb(main):067:0> pp Person.starts_with("Jo").pluck :age, :first_name
+[[27, "John"], [27, "John"], [57, "Josh"]]
+=> [[27, "John"], [27, "John"], [57, "Josh"]]
+irb(main):068:0>
+
+# Given that scope returns Active Record you can chain it with other db methods
+================================================================================
+irb(main):068:0> Person.ordered_by_age.limit(2).starts_with("Jo").pluck :age, :first_name
+=> [[27, "John"], [27, "John"]]
+irb(main):069:0>
+
