@@ -10,4 +10,5 @@
 8. rails console                                                    # Command to drop to console
 9. rails generate model person first_name last_name                 # Model generator. This does not generate controller.
 10. rake --describe db:seed                                         # Describe from where the DB will be seeded from.
-11. rails generate model personal_info height:float weight:float person:references  # Adding references belongs_to
+11. rails generate model personal_info height:float weight:float person:references  # Adding references 1:1
+12. rails generate migration create_hobbies_people person:references hobby:references # 1: many. model names should be in alphabetical order

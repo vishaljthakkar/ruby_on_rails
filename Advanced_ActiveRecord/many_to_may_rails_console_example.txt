@@ -1,0 +1,32 @@
+irb(main):007:0> reload!
+Reloading...
+=> true
+irb(main):008:0> Person.first.my_jobs
+=> #<ActiveRecord::Associations::CollectionProxy [#<Job id: 2, title: "Developer", company: "Microsoft", position_id: "#1234", person_id: 15, created_at: "2019-07-04 01:04:34", updated_at: "2019-07-04 01:04:34">, #<Job id: 3, title: "Developer", company: "Microsoft", position_id: "#1235", person_id: 15, created_at: "2019-07-04 01:04:34", updated_at: "2019-07-04 01:04:34">]>
+irb(main):009:0> Person.first.my_jobs.first
+=> #<Job id: 2, title: "Developer", company: "Microsoft", position_id: "#1234", person_id: 15, created_at: "2019-07-04 01:04:34", updated_at: "2019-07-04 01:04:34">
+irb(main):010:0> reload!
+Reloading...
+=> true
+irb(main):011:0> josh = Person.find_by(first_name: "Josh")
+=> #<Person id: 18, first_name: "Josh", age: 57, last_name: "Oreck", created_at: "2019-07-04 01:04:34", updated_at: "2019-07-04 01:04:34", login: "josh", pass: "password1">
+irb(main):012:0> lebron = Person.find_by(first_name: "LeBron")
+=> #<Person id: 21, first_name: "LeBron", age: 30, last_name: "James", created_at: "2019-07-04 01:04:34", updated_at: "2019-07-04 01:04:34", login: "bron", pass: "need more rings">
+irb(main):013:0> Hobby.create name: "Programming"
+=> #<Hobby id: 1, name: "Programming", created_at: "2019-07-04 03:17:50", updated_at: "2019-07-04 03:17:50">
+irb(main):014:0> programming = Hobbies.first
+Traceback (most recent call last):
+        1: from (irb):14
+NameError (uninitialized constant Hobbies)
+irb(main):015:0> programming = Hobby.first
+=> #<Hobby id: 1, name: "Programming", created_at: "2019-07-04 03:17:50", updated_at: "2019-07-04 03:17:50">
+irb(main):016:0> programming
+=> #<Hobby id: 1, name: "Programming", created_at: "2019-07-04 03:17:50", updated_at: "2019-07-04 03:17:50">
+irb(main):017:0> josh.hobbies
+=> #<ActiveRecord::Associations::CollectionProxy []>
+irb(main):018:0> josh.hobbies << programming
+=> #<ActiveRecord::Associations::CollectionProxy [#<Hobby id: 1, name: "Programming", created_at: "2019-07-04 03:17:50", updated_at: "2019-07-04 03:17:50">]>
+irb(main):019:0> lebron.hobbies << programming
+=> #<ActiveRecord::Associations::CollectionProxy [#<Hobby id: 1, name: "Programming", created_at: "2019-07-04 03:17:50", updated_at: "2019-07-04 03:17:50">]>
+irb(main):020:0>
+
