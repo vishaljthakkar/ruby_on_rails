@@ -1,0 +1,33 @@
+irb(main):086:0> sr.save!
+Traceback (most recent call last):
+        1: from (irb):86
+ActiveRecord::RecordInvalid (Validation failed: Job must exist, Min salary must be less than 10.0)
+irb(main):087:0> job = Job.new
+=> #<Job id: nil, title: nil, company: nil, position_id: nil, person_id: nil, created_at: nil, updated_at: nil>
+irb(main):088:0> job.errors
+=> #<ActiveModel::Errors:0x00007f844288cf48 @base=#<Job id: nil, title: nil, company: nil, position_id: nil, person_id: nil, created_at: nil, updated_at: nil>, @messages={}, @details={}>
+irb(main):089:0> job.save
+=> false
+irb(main):090:0>
+irb(main):091:0>
+irb(main):092:0>
+irb(main):093:0> job.errors
+=> #<ActiveModel::Errors:0x00007f844288cf48 @base=#<Job id: nil, title: nil, company: nil, position_id: nil, person_id: nil, created_at: nil, updated_at: nil>, @messages={:person=>["must exist"], :title=>["can't be blank"], :company=>["can't be blank"]}, @details={:person=>[{:error=>:blank}], :title=>[{:error=>:blank}], :company=>[{:error=>:blank}]}>
+irb(main):094:0>
+irb(main):095:0>
+irb(main):096:0>
+irb(main):097:0> job.save!
+Traceback (most recent call last):
+        1: from (irb):97
+ActiveRecord::RecordInvalid (Validation failed: Person must exist, Title can't be blank, Company can't be blank)
+irb(main):098:0>
+irb(main):099:0>
+irb(main):100:0> sr = SalaryRange.create min_salary: 30.00, max_salary: 10.00
+=> #<SalaryRange id: nil, min_salary: 30.0, max_salary: 10.0, job_id: nil, created_at: nil, updated_at: nil>
+irb(main):101:0>
+irb(main):102:0> sr.save!
+Traceback (most recent call last):
+        1: from (irb):102
+ActiveRecord::RecordInvalid (Validation failed: Job must exist, Min salary must be less than 10.0)
+irb(main):103:0>
+
