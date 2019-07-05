@@ -1,0 +1,31 @@
+irb(main):018:0> Person.first.personal_info.weight
+  Person Load (0.2ms)  SELECT  "people".* FROM "people" ORDER BY "people"."first_name" ASC LIMIT ?  [["LIMIT", 1]]
+  PersonalInfo Load (0.1ms)  SELECT  "personal_infos".* FROM "personal_infos" WHERE "personal_infos"."person_id" = ? LIMIT ?  [["person_id", 20], ["LIMIT", 1]]
+=> 544.0
+irb(main):019:0> # Two SQL Queries were made
+=> nil
+irb(main):020:0>
+irb(main):021:0> Person.all.each { |person| person.personal_info.weight }
+  Person Load (0.2ms)  SELECT "people".* FROM "people" ORDER BY "people"."first_name" ASC
+  PersonalInfo Load (0.1ms)  SELECT  "personal_infos".* FROM "personal_infos" WHERE "personal_infos"."person_id" = ? LIMIT ?  [["person_id", 20], ["LIMIT", 1]]
+  PersonalInfo Load (0.1ms)  SELECT  "personal_infos".* FROM "personal_infos" WHERE "personal_infos"."person_id" = ? LIMIT ?  [["person_id", 16], ["LIMIT", 1]]
+  PersonalInfo Load (0.1ms)  SELECT  "personal_infos".* FROM "personal_infos" WHERE "personal_infos"."person_id" = ? LIMIT ?  [["person_id", 19], ["LIMIT", 1]]
+  PersonalInfo Load (0.1ms)  SELECT  "personal_infos".* FROM "personal_infos" WHERE "personal_infos"."person_id" = ? LIMIT ?  [["person_id", 18], ["LIMIT", 1]]
+  PersonalInfo Load (0.1ms)  SELECT  "personal_infos".* FROM "personal_infos" WHERE "personal_infos"."person_id" = ? LIMIT ?  [["person_id", 15], ["LIMIT", 1]]
+  PersonalInfo Load (0.1ms)  SELECT  "personal_infos".* FROM "personal_infos" WHERE "personal_infos"."person_id" = ? LIMIT ?  [["person_id", 21], ["LIMIT", 1]]
+  PersonalInfo Load (0.1ms)  SELECT  "personal_infos".* FROM "personal_infos" WHERE "personal_infos"."person_id" = ? LIMIT ?  [["person_id", 17], ["LIMIT", 1]]
+=> [#<Person id: 20, first_name: "Bill", age: 75, last_name: "Gates", created_at: "2019-07-04 01:04:34", updated_at: "2019-07-04 01:04:34", login: "bill", pass: "windows3.1">, #<Person id: 16, first_name: "John", age: 27, last_name: "Whatever", created_at: "2019-07-04 01:04:34", updated_at: "2019-07-04 01:04:34", login: "john1", pass: "123abc">, #<Person id: 19, first_name: "John", age: 27, last_name: "Smith", created_at: "2019-07-04 01:04:34", updated_at: "2019-07-04 01:04:34", login: "john2", pass: "no_idea">, #<Person id: 18, first_name: "Josh", age: 57, last_name: "Oreck", created_at: "2019-07-04 01:04:34", updated_at: "2019-07-04 01:04:34", login: "josh", pass: "password1">, #<Person id: 15, first_name: "Kalman", age: 33, last_name: "Smith", created_at: "2019-07-04 01:04:34", updated_at: "2019-07-04 01:04:34", login: "kman", pass: "abc123">, #<Person id: 21, first_name: "LeBron", age: 30, last_name: "James", created_at: "2019-07-04 01:04:34", updated_at: "2019-07-04 01:04:34", login: "bron", pass: "need more rings">, #<Person id: 17, first_name: "Michael", age: 15, last_name: "Smith", created_at: "2019-07-04 01:04:34", updated_at: "2019-07-04 01:04:34", login: "mike", pass: "not_telling">]
+irb(main):022:0>
+irb(main):023:0> # N + 1 SQL Queries made which is not good.
+=> nil
+irb(main):024:0>
+irb(main):025:0> Person.includes(:personal_info).all.each { |person| person.personal_info.weight }
+  Person Load (0.2ms)  SELECT "people".* FROM "people" ORDER BY "people"."first_name" ASC
+  PersonalInfo Load (0.2ms)  SELECT "personal_infos".* FROM "personal_infos" WHERE "personal_infos"."person_id" IN (?, ?, ?, ?, ?, ?, ?)  [["person_id", 20], ["person_id", 16], ["person_id", 19], ["person_id", 18], ["person_id", 15], ["person_id", 21], ["person_id", 17]]
+=> [#<Person id: 20, first_name: "Bill", age: 75, last_name: "Gates", created_at: "2019-07-04 01:04:34", updated_at: "2019-07-04 01:04:34", login: "bill", pass: "windows3.1">, #<Person id: 16, first_name: "John", age: 27, last_name: "Whatever", created_at: "2019-07-04 01:04:34", updated_at: "2019-07-04 01:04:34", login: "john1", pass: "123abc">, #<Person id: 19, first_name: "John", age: 27, last_name: "Smith", created_at: "2019-07-04 01:04:34", updated_at: "2019-07-04 01:04:34", login: "john2", pass: "no_idea">, #<Person id: 18, first_name: "Josh", age: 57, last_name: "Oreck", created_at: "2019-07-04 01:04:34", updated_at: "2019-07-04 01:04:34", login: "josh", pass: "password1">, #<Person id: 15, first_name: "Kalman", age: 33, last_name: "Smith", created_at: "2019-07-04 01:04:34", updated_at: "2019-07-04 01:04:34", login: "kman", pass: "abc123">, #<Person id: 21, first_name: "LeBron", age: 30, last_name: "James", created_at: "2019-07-04 01:04:34", updated_at: "2019-07-04 01:04:34", login: "bron", pass: "need more rings">, #<Person id: 17, first_name: "Michael", age: 15, last_name: "Smith", created_at: "2019-07-04 01:04:34", updated_at: "2019-07-04 01:04:34", login: "mike", pass: "not_telling">]
+irb(main):026:0>
+irb(main):027:0> # Above one is better interms of improvement
+=> nil
+irb(main):028:0>
+irb(main):029:0>
+irb(main):030:0>
