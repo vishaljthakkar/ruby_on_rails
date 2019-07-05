@@ -17,5 +17,8 @@ Rails.application.routes.draw do
   # resources :sessions, only: [:new, :create, :destroy]
   resources :sessions, only: %i[new create destroy]
 
+  # 'as' give us ability to use login_path and logout_path for below
+  get 'login' => 'sessions#new', as: 'login'
+  delete 'logout' => 'sessions#destroy', as: 'logout'
   root 'books#index'
 end
