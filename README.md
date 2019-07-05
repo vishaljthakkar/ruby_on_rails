@@ -13,3 +13,4 @@
 11. rails generate model personal_info height:float weight:float person:references  # Adding references 1:1
 12. rails generate migration create_hobbies_people person:references hobby:references # 1: many. model names should be in alphabetical order
 13. rails generate scaffold_controller book name author             # We generated model before and now want to generate controller and view.
+14. rails generate controller sessions new create destroy           # Generate session controller with actions new, create and destroy
