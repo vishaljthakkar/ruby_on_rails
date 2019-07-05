@@ -1,0 +1,5 @@
+irb(main):002:0> helper.content_tag :p, "Hello there"
+=> "<p>Hello there</p>"
+irb(main):003:0> helper.content_tag(:div, helper.content_tag(:p, "Cool"), class: "world")
+=> "<div class=\"world\"><p>Cool</p></div>"
+irb(main):004:0> pp helper.content_tag(:div, helper.content_tag(:p, "Cool"), class: "world")
