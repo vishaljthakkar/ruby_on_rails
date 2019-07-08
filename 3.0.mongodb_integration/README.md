@@ -300,3 +300,175 @@
             db[:zips].find(:city => "ODENVILLE1").count
             db[:zips].find(:city => "ODENVILLE2").count
 
+Rails Console
+=============
+    Aggregation: $match and $group example => Find total population in state: 'NY'
+    ==============================================================================
+	irb(main):009:0> Zip.collection.find.aggregate([
+	irb(main):010:2*   {:$match => {:state => 'NY'}},
+	irb(main):011:2*   {:$group => {:_id => 'NY', :population => {:$sum => '$pop'}}}
+	irb(main):012:2> ]).to_a
+	=> [{"_id"=>"NY", "population"=>17990402}]
+
+	irb(main):056:0> db = Zip.mongo_client
+
+	irb(main):041:0> db[:zips].find.aggregate([{:$match => {:state => 'NY'}}, {:$group => {:_id => 'NY', :population => {:$sum => '$pop'}}}]).to_a
+	=> [{"_id"=>"NY", "population"=>17990402}]
+
+
+	Aggregation: $project, include fields examples
+	==============================================
+	db[:zips].find.aggregate([{:$project => {_id: 1, city: 1, state: 1, pop: 1}}, {:$limit => 10}]).each { |row| pp row }
+	{"_id"=>"01026", "city"=>"CUMMINGTON", "pop"=>1484, "state"=>"MA"}
+	{"_id"=>"01002", "city"=>"CUSHMAN", "pop"=>36963, "state"=>"MA"}
+	{"_id"=>"01008", "city"=>"BLANDFORD", "pop"=>1240, "state"=>"MA"}
+	{"_id"=>"01027", "city"=>"MOUNT TOM", "pop"=>16864, "state"=>"MA"}
+	{"_id"=>"01028", "city"=>"EAST LONGMEADOW", "pop"=>13367, "state"=>"MA"}
+	{"_id"=>"01031", "city"=>"GILBERTVILLE", "pop"=>2385, "state"=>"MA"}
+	
+	Aggregation: $peoject, exclude field and alter data
+	===================================================
+	irb(main):096:0> db[:zips].find.aggregate([{:$project => {_id: 0, city: 1, state:  {:$toUpper => '$state'}, pop: 1}},{:$limit => 5}]).each { |row| pp row}
+	{"city"=>"CUMMINGTON", "pop"=>1484, "state"=>"MA"}
+	{"city"=>"CUSHMAN", "pop"=>36963, "state"=>"MA"}
+	{"city"=>"BLANDFORD", "pop"=>1240, "state"=>"MA"}
+	{"city"=>"MOUNT TOM", "pop"=>16864, "state"=>"MA"}
+	{"city"=>"EAST LONGMEADOW", "pop"=>13367, "state"=>"MA"}
+	=> nil
+	irb(main):097:0> db[:zips].find.aggregate([{:$project => {_id: 0, city: 1, state:  {:$toLower => '$state'}, pop: 1}},{:$limit => 5}]).each { |row| pp row}
+	{"city"=>"CUMMINGTON", "pop"=>1484, "state"=>"ma"}
+	{"city"=>"CUSHMAN", "pop"=>36963, "state"=>"ma"}
+	{"city"=>"BLANDFORD", "pop"=>1240, "state"=>"ma"}
+	{"city"=>"MOUNT TOM", "pop"=>16864, "state"=>"ma"}
+	{"city"=>"EAST LONGMEADOW", "pop"=>13367, "state"=>"ma"}
+	=> nil
+
+
+	Aggregation: $group with $sum: Group state with sum of their population
+	=======================================================================
+	irb(main):106:0> db[:zips].find.aggregate([{:$group => {_id: '$state', population: {:$sum => '$pop'}}},{:$limit => 5}]).to_a.each { |row| pp row}; nil
+	{"_id"=>"NV", "population"=>1201833}
+	{"_id"=>"ID", "population"=>1006749}
+	{"_id"=>"CO", "population"=>3293755}
+	{"_id"=>"NC", "population"=>6628637}
+	{"_id"=>"TX", "population"=>16984601}
+	=> nil
+
+	Aggregation: $group with $avg
+	=============================
+	irb(main):107:0> db[:zips].find.aggregate([{:$group => {_id: '$state', avg_population: {:$avg => '$pop'}}},{:$limit => 5}]).to_a.each { |row| pp row}; nil
+	{"_id"=>"NV", "avg_population"=>11556.086538461539}
+	{"_id"=>"ID", "avg_population"=>4126.020491803279}
+	{"_id"=>"CO", "avg_population"=>7955.929951690821}
+	{"_id"=>"NC", "avg_population"=>9402.321985815603}
+	{"_id"=>"TX", "avg_population"=>10164.333333333334}
+	=> nil
+
+	Aggregation: $group with $max and $min
+	=======================================
+	irb(main):108:0> db[:zips].find.aggregate([{:$group => {_id: '$state', zip_with_max_population: {:$max => '$pop'}}},{:$limit => 5}]).to_a.each { |row| pp row}; nil
+	{"_id"=>"NV", "zip_with_max_population"=>51532}
+	{"_id"=>"ID", "zip_with_max_population"=>40912}
+	{"_id"=>"CO", "zip_with_max_population"=>59418}
+	{"_id"=>"NC", "zip_with_max_population"=>69179}
+	{"_id"=>"TX", "zip_with_max_population"=>79463}
+	=> nil
+	irb(main):109:0> db[:zips].find.aggregate([{:$group => {_id: '$state', zip_with_min_population: {:$min => '$pop'}}},{:$limit => 5}]).to_a.each { |row| pp row}; nil
+	{"_id"=>"NV", "zip_with_min_population"=>1}
+	{"_id"=>"ID", "zip_with_min_population"=>0}
+	{"_id"=>"CO", "zip_with_min_population"=>0}
+	{"_id"=>"NC", "zip_with_min_population"=>0}
+	{"_id"=>"TX", "zip_with_min_population"=>0}
+	=> nil
+
+	Aggregation: $group with $push
+	==============================
+	Following groups by city and state and if more than one zipcode exists for this combination add it to zips array
+
+	irb(main):123:0> db[:zips].find.aggregate([{:$group => {:_id => {:city => '$city', :state => '$state'}, :zips => {:$push => '$_id'}}},{:$limit => 50}]).each{|row| pp row}
+	{"_id"=>{"city"=>"WRANGELL", "state"=>"AK"}, "zips"=>["99929"]}
+	{"_id"=>{"city"=>"POINT BAKER", "state"=>"AK"}, "zips"=>["99927"]}
+	{"_id"=>{"city"=>"KLAWOCK", "state"=>"AK"}, "zips"=>["99925"]}
+	{"_id"=>{"city"=>"CRAIG", "state"=>"AK"}, "zips"=>["99921"]}
+	{"_id"=>{"city"=>"HOONAH", "state"=>"AK"}, "zips"=>["99829"]}
+	{"_id"=>{"city"=>"NUIQSUT", "state"=>"AK"}, "zips"=>["99789"]}
+	{"_id"=>{"city"=>"AMBLER", "state"=>"AK"}, "zips"=>["99786"]}
+	{"_id"=>{"city"=>"VENETIE", "state"=>"AK"}, "zips"=>["99781"]}
+	{"_id"=>{"city"=>"WHITE MOUNTAIN", "state"=>"AK"}, "zips"=>["99784"]}
+	{"_id"=>{"city"=>"BORDER", "state"=>"AK"}, "zips"=>["99780"]}
+	{"_id"=>{"city"=>"SHUNGNAK", "state"=>"AK"}, "zips"=>["99773"]}
+	{"_id"=>{"city"=>"STEVENS VILLAGE", "state"=>"AK"}, "zips"=>["99774"]}
+	{"_id"=>{"city"=>"POINT LAY", "state"=>"AK"}, "zips"=>["99759"]}
+	{"_id"=>{"city"=>"SHAKTOOLIK", "state"=>"AK"}, "zips"=>["99771"]}
+	{"_id"=>{"city"=>"POINT HOPE", "state"=>"AK"}, "zips"=>["99766"]}
+	...
+	...
+	{"_id"=>{"city"=>"WASILLA", "state"=>"AK"}, "zips"=>["99654", "99687"]} <<<<<<
+
+	Aggregation: $group with $addToSet
+	==================================
+	* This one will give every state in the document
+	db[:zips].find.aggregate([ {:$group=>{:_id=>0, :zips=>{:$push=>"$state"}}}]).first  
+
+	* This one will add to set so we will get unique states. NOTE: $addToSet is not stable whereas $push is stable.
+	db[:zips].find.aggregate([ {:$group=>{:_id=>0, :zips=>{:$addToSet=>"$state"}}}]).first
+
+
+
+	Aggregation: $match + $match vs find, $match + all the other aggregate commands
+	===============================================================================
+	irb(main):184:0> db[:zips].find({state: 'DE'}).first
+	=> {"_id"=>"19707", "city"=>"HOCKESSIN", "loc"=>[-75.688873, 39.77604], "pop"=>13149, "state"=>"DE"}
+
+	irb(main):185:0> db[:zips].find.aggregate([{:$match => {state: 'DE'}}]).first
+	=> {"_id"=>"19707", "city"=>"HOCKESSIN", "loc"=>[-75.688873, 39.77604], "pop"=>13149, "state"=>"DE"}
+	
+	
+
+	irb(main):171:0> db[:zips].find.aggregate([
+	irb(main):172:2*   {:$match => {state: 'NY'}},
+	irb(main):173:2*   {:$group => {:_id => '$city', :aabadi => {:$sum => '$pop'}}},
+	irb(main):174:2*   {:$project => {:_id => 0, :city => '$_id', :aabadi => 1}},
+	irb(main):175:2*   {:$sort => {:aabadi => -1}},
+	irb(main):176:2*   {:$limit => 10}
+	irb(main):177:2> ]).each {|row| p row}
+
+	{"aabadi"=>2300504, "city"=>"BROOKLYN"}
+	{"aabadi"=>1476790, "city"=>"NEW YORK"}
+	{"aabadi"=>1209548, "city"=>"BRONX"}
+	{"aabadi"=>396013, "city"=>"ROCHESTER"}
+	{"aabadi"=>378977, "city"=>"STATEN ISLAND"}
+	{"aabadi"=>375479, "city"=>"BUFFALO"}
+	{"aabadi"=>224162, "city"=>"FLUSHING"}
+	{"aabadi"=>195205, "city"=>"JAMAICA"}
+	{"aabadi"=>184963, "city"=>"SYRACUSE"}
+	{"aabadi"=>172131, "city"=>"YONKERS"}
+	=> nil
+
+	Aggregation: $unwind and contrasting it with match.
+	===================================================
+	$unwind => will basically flatten the output. See below:
+
+	Withouth $unwind
+    ================
+	irb(main):204:0> db[:zips].find().aggregate([{:$match=>{:city=>'ELMIRA'}}, {:$group=>{ :_id=>{:city=>'$city',:state=>'$state'}, :zips=>{:$addToSet=>'$_id'}}}]).each {|r| pp r}
+	{"_id"=>{"city"=>"ELMIRA", "state"=>"MI"}, "zips"=>["49730"]}
+	{"_id"=>{"city"=>"ELMIRA", "state"=>"WV"}, "zips"=>["26618"]}
+	{"_id"=>{"city"=>"ELMIRA", "state"=>"OR"}, "zips"=>["97437"]}
+	{"_id"=>{"city"=>"ELMIRA", "state"=>"NY"}, "zips"=>["14905", "14904", "14901"]}
+	=> nil
+
+	With $unwind
+	============
+	irb(main):212:0> db[:zips].find().aggregate([{:$match=>{:city=>'ELMIRA'}}, {:$group=>{ :_id=>{:city=>'$city',:state=>'$state'},:zips=>{:$addToSet=>'$_id'}}}, {:$unwind=>'$zips'}]).each {|r| pp r}
+	{"_id"=>{"city"=>"ELMIRA", "state"=>"MI"}, "zips"=>"49730"}
+	{"_id"=>{"city"=>"ELMIRA", "state"=>"WV"}, "zips"=>"26618"}
+	{"_id"=>{"city"=>"ELMIRA", "state"=>"OR"}, "zips"=>"97437"}
+	{"_id"=>{"city"=>"ELMIRA", "state"=>"NY"}, "zips"=>"14905"}
+	{"_id"=>{"city"=>"ELMIRA", "state"=>"NY"}, "zips"=>"14904"}
+	{"_id"=>{"city"=>"ELMIRA", "state"=>"NY"}, "zips"=>"14901"}
+	=> nil
+
+
+	
+		
