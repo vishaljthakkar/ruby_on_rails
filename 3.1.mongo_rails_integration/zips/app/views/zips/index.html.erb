@@ -15,7 +15,7 @@
 
   <tbody>
     <% @zips.each do |zip| %>
-      <%# zip=toZip(zip) %>
+      <% zip=toZip(zip) %>
       <tr>
         <td><%= zip.id %></td>
         <td><%= zip.city %></td>
@@ -28,6 +28,7 @@
     <% end %>
   </tbody>
 </table>
+<%= will_paginate @zips %>
 
 <br>
 

@@ -5,6 +5,7 @@ class ZipsController < ApplicationController
   # GET /zips.json
   def index
     # @zips = Zip.all
+    # gem will_paginate form index.html API query would look like http://localhost:3000/zips?page=2
     @zips = Zip.paginate(:page => params[:page])
   end
 
@@ -15,7 +16,7 @@ class ZipsController < ApplicationController
 
   # GET /zips/new
   def new
-    @zip = Zip.new
+    @zip = Zip.new # This will open up a form new.html.erb
   end
 
   # GET /zips/1/edit
@@ -24,6 +25,7 @@ class ZipsController < ApplicationController
 
   # POST /zips
   # POST /zips.json
+  # Creates new instance in the database
   def create
     @zip = Zip.new(zip_params)
 
