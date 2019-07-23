@@ -22,3 +22,5 @@ Rails Console mongoid examples
         MONGODB | localhost:27017 | zips_development.count | SUCCEEDED | 0.001s
         => 29353
 
+    > rails generate scaffold_controller Zip id city state population:integer
+

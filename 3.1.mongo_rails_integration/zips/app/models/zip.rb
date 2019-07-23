@@ -60,7 +60,7 @@ class Zip
     # convert to keys and then eliminate any properties not of interest
     prototype = prototype.symbolize_keys.slice(:city, :state) unless prototype.nil?
 
-    Rails.logger.debug do
+    Rails.logger.info do
       " getting all zips, prototype=#{prototype}, sort=#{sort}, offset=#{offset}, limit=#{limit}"
     end
 
@@ -106,7 +106,7 @@ class Zip
   # locate a specific document. Use initialize(hash) on the result to
   # get in class instance form
   def self.find(id)
-    Rails.logger.debug {"getting zip #{id}"}
+    Rails.logger.info {"getting zip #{id}"}
 
     doc=collection.find(:_id=>id)
                   .projection({_id:true, city:true, state:true, pop:true})
