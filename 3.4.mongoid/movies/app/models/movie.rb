@@ -36,7 +36,7 @@ class Movie
          "sequel_to=#{doc.sequel_to}, writers=#{doc.writer_ids}"
   end
 
-  scope :current, ->{ where(:year.gt=>Date.current.year-2) }
+  scope :current, ->{ where(:year.gt=>Date.current.year-10) }
 
   def sanitize_for_mass_assignment(params)
     params ||= {}
